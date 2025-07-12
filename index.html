@@ -24,6 +24,7 @@
     .contact-form { display: flex; flex-direction: column; gap: 1rem; max-width: 600px; margin: auto; }
     .contact-form input, .contact-form textarea { padding: 0.8rem; border: none; border-radius: 6px; font-size: 1rem; }
     .contact-form button { align-self: flex-start; }
+    .success-message { color: #4caf50; background-color: #1a1c22; border: 1px solid #4caf50; padding: 1rem; border-radius: 6px; margin-top: 1rem; display: none; text-align: center; }
     footer { background: #1a1c22; text-align: center; padding: 1.5rem; color: #aaa; margin-top: 4rem; }
   </style>
 </head>
@@ -72,12 +73,13 @@
 
   <section class="section" id="contact">
     <h2 style="text-align:center; margin-bottom:2rem;">Get in Touch</h2>
-    <form class="contact-form" action="https://formsubmit.co/marwanelsayed279@gmail.com" method="POST">
+    <form class="contact-form" id="contactForm">
       <input type="text" name="name" placeholder="Your Name" required>
       <input type="email" name="email" placeholder="Your Email" required>
       <textarea name="message" rows="5" placeholder="How can we help you?" required></textarea>
       <button class="btn" type="submit">Send Message</button>
     </form>
+    <div class="success-message" id="successMessage">✅ Thank you! Your message has been sent successfully.</div>
   </section>
 
   <footer>
@@ -85,6 +87,7 @@
   </footer>
 
   <script>
+    // تنشيط التنقل
     const sections = document.querySelectorAll("section[id]");
     const navLinks = document.querySelectorAll(".nav-link");
 
@@ -102,6 +105,30 @@
           link.classList.add("active");
         }
       });
+    });
+
+    // إرسال النموذج بدون إعادة توجيه
+    const form = document.getElementById("contactForm");
+    const successMessage = document.getElementById("successMessage");
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const formData = new FormData(form);
+      fetch("https://formsubmit.co/ajax/marwanelsayed279@gmail.com", {
+        method: "POST",
+        headers: { 'Accept': 'application/json' },
+        body: formData
+      })
+      .then(response => {
+        if (response.ok) {
+          successMessage.style.display = "block";
+          form.reset();
+        } else {
+          alert("There was an error submitting the form.");
+        }
+      })
+      .catch(error => alert("Network error. Please try again later."));
     });
   </script>
 </body>
